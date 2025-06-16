@@ -10,10 +10,10 @@ def next_letter(letter):
     return chr((ord(letter.lower()) - ord('a') + 1) % 26 + ord('a'))
 
 # Plug Board
-A_PlugBoardRelations = {"A":"B", "C":"D"}
-B_PlugBoardRelations = {v: k for k, v in A_PlugBoardRelations.items()}
+def plugboard(letter, A_PlugBoardRelations):
 
-def plugboard(letter):
+    B_PlugBoardRelations = {v: k for k, v in A_PlugBoardRelations.items()}
+
     if letter in A_PlugBoardRelations: # Check Foward Relations
         return A_PlugBoardRelations[letter]
     elif letter in B_PlugBoardRelations: # Check Backward Relations
@@ -27,24 +27,19 @@ Turnover = ("Q", "E", "V", "J", "Z")
 
 class Rotor():
     def __init__(self, type, ring_setting, initial_position, order):
-        self.wiring = RotorWirings[type -1] # Encryption wiring
+        self.wiring = RotorWirings[int(type) -1] # Encryption wiring
         self.ring_setting = letter_to_index(ring_setting) # Ring setting offset
-        self.turnover_letter = letter_to_index(next_letter(Turnover[type - 1])) # Turnover values
+        self.turnover_letter = letter_to_index(Turnover[type - 1]) # Turnover values
         self.order = order # Rotor position, be it left, center, or right (1, 2, 3)
         self.rotor_position = letter_to_index(initial_position)
+
+        # Reverse wiring for signal's return
+        self.reverse_wiring = [''] * 26
+        for i, letter in enumerate(self.wiring):
+            self.reverse_wiring[letter_to_index(letter)] = index_to_letter(i)
         
     def press(self, input):
         Input_index = letter_to_index(input)
-
-        # Add additional rotation if rotor is on the right side
-        if self.order == 3:
-            self.rotor_position = self.rotor_position + 1
-        else:
-            self.rotor_position = self.rotor_position
-
-        # Turnover
-        if self.rotor_position == self.turnover_letter:
-            self.turnover()
 
         # Calculate effective rotor shift
         self.effective_rotor_shift = self.rotor_position - self.ring_setting
@@ -56,9 +51,26 @@ class Rotor():
 
         return index_to_letter(Encryption).upper()
     
-    def turnover(self):
-        if self.order > 0:
-            Rotors[self.order - 2].rotor_position += 1
+    def returnal(self, input):
+        Input_index = letter_to_index(input)
+
+        # Calculate effective rotor shift
+        self.effective_rotor_shift = self.rotor_position - self.ring_setting
+        
+        # Obtain index with applied offsets, encrypt according to rotor wiring, and substract effective rotor shift
+        Encryption = (Input_index + self.rotor_position - self.ring_setting) % 26
+        Encryption = self.reverse_wiring[Encryption]
+        Encryption = (letter_to_index(Encryption) - self.effective_rotor_shift) % 26
+
+        return index_to_letter(Encryption).upper()
+    
+    def at_turnover(self):
+        print(f"SELF ROTOR POSITION: {self.rotor_position}")
+        print(f"TURNOVER POSITION: {self.turnover_letter}")
+        return self.rotor_position == self.turnover_letter
+
+    def step(self):
+        self.rotor_position = (self.rotor_position + 1) % 26
 
 # Reflectors 
 ReflectorsWiring = ("YRUHQSLDPXNGOKMIEBFZCWVJAT", "FVPJIAOYEDRZXWGCTKUQSBNMHL")
@@ -69,12 +81,9 @@ class Reflector():
     
     def reflect(self, input):
         return self.wiring[letter_to_index(input)]
-    
 
-R = Reflector("B")
-I = Rotor(1, "A", "A", 1)
-II = Rotor(2, "A", "A", 2)
-III = Rotor(3, "A", "V", 3)
+
+
 
 
 
