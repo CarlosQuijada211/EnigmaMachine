@@ -12,9 +12,6 @@ def roman_to_int(roman):
             prev_value = value
     return total
 
-def roman_list(roman_string):
-    return [roman_to_int(r) for r in roman_string.split()]
-
 def pairs_to_dict(s):
     pairs = s.split()
 
@@ -24,7 +21,7 @@ def pairs_to_dict(s):
     for pair in pairs:
         if len(pair) != 2:
             raise ValueError(f"Invalid pair length: '{pair}'")
-        a, b = pair[0], pair[1]
+        a, b = pair[0].upper(), pair[1].upper()
         if a in seen_letters or b in seen_letters:
             raise ValueError(f"Repeated letter found: '{a}' or '{b}'")
         seen_letters.update([a, b])
@@ -41,14 +38,17 @@ def step_rotors(rotors):
     if middle.at_turnover():
         middle.step()
         left.step()
-        print("MIDDLESTEP, LEFTSTEP")
 
     # If right rotor is at its notch, middle rotor steps
     elif right.at_turnover():
         middle.step()
-        print("MIDDLE STEP")
 
     # Right rotor always steps
     right.step()
-    print("RIGHT STEP")
+
+def letter_to_index(letter):
+    return ord(letter.lower()) - ord('a')
+
+def index_to_letter(index):
+    return chr(index + ord('a'))
     

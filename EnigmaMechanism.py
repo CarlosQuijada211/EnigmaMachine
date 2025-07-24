@@ -1,13 +1,4 @@
-
-# Helper Functions
-def letter_to_index(letter):
-    return ord(letter.lower()) - ord('a')
-
-def index_to_letter(index):
-    return chr(index + ord('a'))
-
-def next_letter(letter):
-    return chr((ord(letter.lower()) - ord('a') + 1) % 26 + ord('a'))
+from Helper import letter_to_index, index_to_letter
 
 # Plug Board
 def plugboard(letter, A_PlugBoardRelations):
@@ -27,6 +18,7 @@ Turnover = ("Q", "E", "V", "J", "Z")
 
 class Rotor():
     def __init__(self, type, ring_setting, initial_position, order):
+        self.type = type
         self.wiring = RotorWirings[int(type) -1] # Encryption wiring
         self.ring_setting = letter_to_index(ring_setting) # Ring setting offset
         self.turnover_letter = letter_to_index(Turnover[type - 1]) # Turnover values
@@ -37,6 +29,9 @@ class Rotor():
         self.reverse_wiring = [''] * 26
         for i, letter in enumerate(self.wiring):
             self.reverse_wiring[letter_to_index(letter)] = index_to_letter(i)
+    
+    def __str__(self):
+        return self.type
         
     def press(self, input):
         Input_index = letter_to_index(input)
@@ -65,8 +60,6 @@ class Rotor():
         return index_to_letter(Encryption).upper()
     
     def at_turnover(self):
-        print(f"SELF ROTOR POSITION: {self.rotor_position}")
-        print(f"TURNOVER POSITION: {self.turnover_letter}")
         return self.rotor_position == self.turnover_letter
 
     def step(self):
@@ -77,8 +70,12 @@ ReflectorsWiring = ("YRUHQSLDPXNGOKMIEBFZCWVJAT", "FVPJIAOYEDRZXWGCTKUQSBNMHL")
 
 class Reflector():
     def __init__(self, type):
-        self.wiring = ReflectorsWiring[letter_to_index(type) - 1]
+        self.type = type
+        self.wiring = ReflectorsWiring[0] if type == "UKW-B" else ReflectorsWiring[1]
     
+    def __str__(self):
+        return self.type
+        
     def reflect(self, input):
         return self.wiring[letter_to_index(input)]
 
