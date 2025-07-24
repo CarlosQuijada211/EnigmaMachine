@@ -15,6 +15,20 @@ A fully functional simulation of the WWII-era M3 Enigma encryption machine, comp
 - Modular design: backend and frontend are cleanly separated
 
 ## How It Works
+<p align="center">
+  <img src="Assets/Configuration.png" alt="Enigma Config UI" style="width:70%; height:auto;" />
+</p>
+<p align="center">
+  <em>Configuration interface: select rotors, ring settings, initial positions, and plugboard pairs</em>
+</p>
+
+<p align="center">
+  <img src="Assets/Decryption_1.png" alt="Enigma Decryption UI" style="width:45%; height:auto;" />
+  <img src="Assets/Decryption_2.png" alt="Enigma Decryption UI" style="width:45%; height:auto;" />
+</p>
+<p align="center">
+  <em>Decryption interface: enter encrypted messages and retrieve the plaintext</em>
+</p>
 
 ### Encryption Mechanism (`EnigmaMechanism.py`)
 The encryption mechanism mirrors the structure of the historical Enigma machine and is split into modular components:
@@ -78,3 +92,23 @@ The application includes a user-friendly interface built with Tkinter, divided i
 - Decryption output is displayed in real time
 
 The GUI is structured using a frame-switching architecture, with a central controller managing navigation between configuration and output views. This separation of concerns keeps the interface logic cleanly decoupled from the underlying encryption mechanism.
+
+## How to Install
+### Prerequisites
+- Python 3.6 or higher
+- Tkinter (usually included with Python by default)
+  
+### Steps
+1. Clone this repository
+```bash
+git clone https://github.com/CarlosQuijada211/EnigmaMachine.git
+cd EnigmaMachine
+```
+2. Run the application
+```bash
+python3 EnigmaMachine.py
+```
+## Acknowledgements
+- Inspired by historical reconstructions of the Enigma machine
+- Based on documentation from Crypto Museum
+
